@@ -129,6 +129,7 @@ export default {
             })
             if(res.data.success){
                 this.$toast.success('借款成功')
+                this.show = false
             }
         }
     }
