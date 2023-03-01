@@ -5,11 +5,6 @@ import Home from '../views/Home.vue'
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
   // 登录
   {
     path: '/login',
@@ -89,7 +84,7 @@ const routes = [
   },
   // 首页
   {
-    path: '/home',
+    path: '/',
     name: 'home',
     title: "首页",
     component: () => import('../views/home/home-index.vue')
