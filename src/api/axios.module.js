@@ -11,9 +11,8 @@ import Vue from 'vue'
 // 'https://127.0.0.1:10020/data_admin'
 
 let axiosInstance = axios.create({
-    baseURL: process.env.NODE_ENV === 'production' ?
-        'https://supermeoki.xyz/data_admin' :
-        'http://127.0.0.1:10020/data_admin',
+    // baseURL: process.env.NODE_ENV === 'production' ?
+    baseURL: 'http://107.182.25.77:3988/api',
     timeout: 15 * 1000, // 设置请求超时时间
     retryDelay: 1000, // 超时请求
     retry: 4, // 超时重新触发请求次数
