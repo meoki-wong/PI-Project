@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-import router from './router'
+import router from './permission/permission'
 import store from './store'
 import 'lib-flexible/flexible'
 import Vant from 'vant';

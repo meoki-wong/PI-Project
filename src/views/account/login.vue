@@ -59,7 +59,7 @@ export default {
                 let { token, user} = res.data.data
                 window.localStorage.token = res.data.data.token,
                 window.sessionStorage.userInfo = user
-                this.$router.push('/home')
+                this.$router.push('/')
             }
         },
         async getLogo(){
