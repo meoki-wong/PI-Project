@@ -1,0 +1,42 @@
+.login-contain {
+    .logo {
+        margin: 41px auto 58px;
+        width: 73px;
+        height: 73px;
+        border: 1px solid #d9d9d9;
+    }
+    .opt-area{
+        padding: 0 39px 0 43px;
+        box-sizing: border-box;
+        margin-bottom: 25px;
+        .sms-btn{
+            width: 74px;
+            height: 27px;
+            border-radius: 0px 0px 0px 0px;
+            opacity: 1;
+            border: 1px solid #F91E1E;
+            font-size: 12px;
+            font-family: PingFang SC-Light, PingFang SC;
+            font-weight: 300;
+            color: #F91E1E;
+            line-height: 27px;
+            text-align: center;
+        }
+
+        /deep/.van-cell::after{
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .van-cell--borderless::after, .van-cell:last-child::after{
+            display: block;
+        }
+    }
+    .login-btn{
+        width: 283px;
+        height: 43px;
+        margin: 0 auto;
+        img{
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
