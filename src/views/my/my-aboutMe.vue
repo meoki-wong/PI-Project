@@ -1,7 +1,7 @@
 <template>
   <div class="about-me-contain">
     <Navbar title="关于我们"/>
-    <div class="inner">
+    <div class="inner" v-html="aboutDom">
         <p> 深圳前海微众银行股份有限公司于2014年12月16日成立。 法定代表人顾敏。</p>
 <p> </p>
     <p> 微粒贷是深圳前海微众银行股份有限公司(简称：微粒贷)开发的一款金融服务类软件。微粒贷提供快速便捷的小额贷款服务，最快3分钟完成贷款手续，当天放款，贷款手续简单。</p>
@@ -32,6 +32,22 @@ import Navbar from '../components/NavBar.vue'
 export default {
     components: {
         Navbar
+    },
+    data(){
+        return {
+            aboutDom: ""
+        }
+    },
+    mounted(){
+        this.getData()
+    },
+    methods: {
+        async getData(){
+            let res = await this.axios.get('/Settings/about')
+            if(res.data.success){
+                this.aboutDom = res.data.data.content
+            }
+        }
     }
 }
 </script>

@@ -31,7 +31,7 @@ axiosInstance.interceptors.request.use((config) => {
         config.headers = {}
     } else {
         // 区分上传接口和普通接口
-        if (config.url === "/uploadFile") {
+        if (config.url === "/upload/index") {
             //以formData上传时请求头Content-Type类型要改为multipart/form-data
             config.headers['Content-Type'] = "multipart/form-data";
         } 
@@ -55,7 +55,7 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use((config) => {
     let { status, statusText, data } = config
     if (!data.success) {
-        Toast.fail(data.msg)
+        Toast.fail(data.msg || data.data)
         return
     }
     return config

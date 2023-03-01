@@ -15,6 +15,9 @@ export default {
     components: {
         Navbar,
     },
+    mounted(){
+        this.getData()
+    },
     data(){
         return{
             tabsList: [
@@ -32,6 +35,11 @@ export default {
         changeTabs(e){
             this.list = () => import(`./components/${e}.vue`)
             this.navTitle = this.tabsList.find(item=> item.type == e)
+        },
+        async getData(){
+            let res = await this.axios.get('/user/user_info')
+            console.log('====res', res);
+
         }
     }
 }

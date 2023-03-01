@@ -8,12 +8,12 @@
         <div class="top-title">让信用不负期待</div>
         <div class="info-box">
             <p class="title">最高借款额度（元）</p>
-            <div class="inner"><p>300000</p> <div>立即借款</div></div>
+            <div class="inner"><p>{{maxMoney}}</p> <div @click="immediateLoan">立即借款</div></div>
             <p class="desc">最低利率 0.02% （年化利率 0.73%）</p>
         </div>
         <div class="broadcast">
             <img src="./assets/img/guangbo-icon.png" alt="">
-            用户 159****3666 获得76000元额度
+            {{notify}}
         </div>
 
         <!-- app福利 -->
@@ -62,7 +62,42 @@
 export default {
     data(){
         return {
-            
+            maxMoney: 0, // 最高借款
+            notify: "", // 广播
+            timing: 0, // 计数器
+            userInfoStatus: 0, // 状态
+        }
+    },
+    mounted(){
+        this.getData()
+    },
+    methods: {
+        async getData(){
+            let res = await this.axios.get('/index/index')
+            console.log('-res', res);
+            let _this = this
+            if(res.data.success){
+                let { dai_max_money, notices, user_info_status } = res.data.data
+                this.maxMoney = dai_max_money
+                this.notify = notices[this.timing]
+                this.userInfoStatus = user_info_status || 0
+                this.timing ++
+                setInterval(() => {
+                    _this.notify = notices[_this.timing]
+                    _this.timing ++
+                    if(_this.timing > 5){
+                        _this.timing = 0
+                    }
+                    this.$forceUpdate()
+                }, 5000);
+            }
+        },
+        immediateLoan(){
+            let pathObj = {
+                0: "/loanPurpose",
+                1: "/loan"
+            }
+            this.$router.push(pathObj[this.userInfoStatus + 1])
         }
     }
 }

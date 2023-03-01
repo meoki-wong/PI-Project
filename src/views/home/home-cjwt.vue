@@ -2,7 +2,7 @@
   <div class="question-contain">
     <Navbar title="常见问题"/>
     <van-collapse v-model="activeName" accordion>
-        <van-collapse-item :title="item.title" :name="index" v-for="(item, index) in faqList" :key="index">{{item.answer}}</van-collapse-item>
+        <van-collapse-item :title="item.title" :name="index" v-for="(item, index) in faqList" :key="index">{{item.contents}}</van-collapse-item>
     </van-collapse>
   </div>
 </template>
@@ -14,12 +14,23 @@ export default {
   components: {
     Navbar
   },
+  mounted(){
+    this.getData()
+  },
     data(){
         return {
             activeName: "1",
             faqList
 
         }
+    },
+    methods: {
+      async getData(){
+        let res = await this.axios.get('/Settings/helps')
+        if(res.data.success){
+          this.faqList = res.data.data
+        }
+      }
     }
 }
 </script>

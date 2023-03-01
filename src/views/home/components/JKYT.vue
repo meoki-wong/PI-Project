@@ -2,12 +2,12 @@
 <template>
     <div class="jkyt-contain">
         <van-field
-            v-model="value"
+            v-model="useremark"
             label="借款用途"
             placeholder="借款用途"
             input-align="right"
         />
-        <div class="next-step">
+        <div class="next-step" @click="commitData">
             <img src="../assets/img/next-step.png" alt="">
         </div>
     </div>
@@ -17,7 +17,15 @@
 export default {
     data(){
         return {
-            value: ""
+            useremark: ""
+        }
+    },
+    methods: {
+        async commitData(){
+            let res = await this.axios.post('/user/user_info', {useremark})
+            if(res.data.success){
+                this.$toast.success('提交成功')
+            }
         }
     }
 }
