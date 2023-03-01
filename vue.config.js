@@ -19,7 +19,7 @@ const config = {
     },
     devServer: {
         hot: true,
-        inline: true
+        // inline: true
     }
 }
 
