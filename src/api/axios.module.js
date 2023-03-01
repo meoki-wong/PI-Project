@@ -26,9 +26,6 @@ axiosInstance.interceptors.request.use((config) => {
     if (requestWhiteList.includes(config.url)) {
         return config
     }
-    let userInfo = {
-        id: JSON.parse(localStorage.getItem('userInfo'))?.id || ''
-    }
     let token = window.localStorage.getItem('token')
     if (!config.headers) {
         config.headers = {}
@@ -41,12 +38,11 @@ axiosInstance.interceptors.request.use((config) => {
         else {
             config.headers['Content-Type'] = 'application/json';
         }
-        config.headers.authorization = token 
+        config.headers.token = token 
         // 暂时不能使用中文做中文名  header不能写入中文  需要传入时进行过滤  后期做处理
-        config.headers = {
-            authorization: token,
-            userInfo: JSON.stringify(userInfo)
-        }
+        // config.headers = {
+        //     authorization: token,
+        // }
     }
     return config
 }, (err) => {
@@ -59,7 +55,7 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use((config) => {
     let { status, statusText, data } = config
     if (!data.success) {
-        Toast.fail(data.Message)
+        Toast.fail(data.msg)
         return
     }
     return config
