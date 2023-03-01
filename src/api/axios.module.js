@@ -6,9 +6,6 @@ import Vue from 'vue'
 
 // import axiosRetry from 'axios-retry'
 // @ts-ignore
-// axios.defaults.baseURL = process.env.NODE_ENV === 'production' ?
-// 'https://supermeoki/data_admin' :
-// 'https://127.0.0.1:10020/data_admin'
 
 let axiosInstance = axios.create({
     // baseURL: process.env.NODE_ENV === 'production' ?
