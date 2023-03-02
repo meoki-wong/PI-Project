@@ -40,13 +40,19 @@
                 </template>
             </van-field>
         <div class="commot-btn" @click="commitData">
-            <img src="../assets/img/commit.png" alt="">
+            <img src="../assets/img/next-step.png" alt="">
         </div>
     </div>
 </template>
 
 <script>
 export default {
+    props: {
+        testData: {
+            type: Object,
+            default: () => {}
+        }
+    },
     data(){
         return {
             info: {
@@ -59,6 +65,11 @@ export default {
             sms: ""
         }
     },
+    watch: {
+        testData(val){
+            console.log('触发出发', val);
+        }
+    },
     methods: {
         async inputPhoto(e, type) {
             let file = e.target.files;
@@ -69,15 +80,28 @@ export default {
             }
 
         },
+    
         async commitData(){
-            let res = await this.axios.psot('/user/user_info', {
-                cardpic1: this.cardFront,
+            // let res = await this.axios.post('/user/user_info', {
+            //     cardpic1: this.cardFront,
+            //     cardpic2: this.cardBack,
+            //     ...this.info
+            // })
+            // if(res.data.success){
+            //     this.$toast.success('提交成功')
+            // }
+            // this.$emit('sonData', {
+            //     cardFront: this.cardFront,
+            //     cardBack: this.cardBack,
+            //     ...this.info
+            //     })
+                // this.$parent.$parent.$parent.$parent.changeTabs('ZL')
+                document.querySelectorAll('.van-tab')[1].click()
+                this.$parent.$parent.$parent.$parent.params = {cardpic1: this.cardFront,
                 cardpic2: this.cardBack,
-                ...this.info
-            })
-            if(res.data.success){
-                this.$toast.success('提交成功')
-            }
+                ...this.info,
+                ...this.$parent.$parent.$parent.$parent.params
+                }
         }
     }
 }

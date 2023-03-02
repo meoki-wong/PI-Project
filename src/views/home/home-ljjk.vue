@@ -3,7 +3,7 @@
     <Navbar :title="navTitle.title"/>
     <van-tabs type="card" @change="changeTabs">
         <van-tab :title="item.title" :name="item.type" v-for="(item, index) in tabsList" :key="index">
-            <component :is="list"></component>
+            <component :is="list" :testData="params"></component>
         </van-tab>
     </van-tabs>
   </div>
@@ -15,9 +15,17 @@ export default {
     components: {
         Navbar,
     },
+    data(){
+        return {
+            params: {
+
+            }
+        }
+    },
     mounted(){
         this.getData()
     },
+    
     data(){
         return{
             tabsList: [
@@ -35,12 +43,13 @@ export default {
         changeTabs(e){
             this.list = () => import(`./components/${e}.vue`)
             this.navTitle = this.tabsList.find(item=> item.type == e)
+            
         },
         async getData(){
             let res = await this.axios.get('/user/user_info')
             console.log('====res', res);
 
-        }
+        },
     }
 }
 </script>

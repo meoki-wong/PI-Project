@@ -8,7 +8,7 @@
             input-align="right"
         />
         <div class="next-step" @click="commitData">
-            <img src="../assets/img/next-step.png" alt="">
+            <img src="../assets/img/commit.png" alt="">
         </div>
     </div>
 </template>
@@ -22,7 +22,12 @@ export default {
     },
     methods: {
         async commitData(){
-            let res = await this.axios.post('/user/user_info', {useremark})
+            this.$parent.$parent.$parent.$parent.params = {
+                ...this.$parent.$parent.$parent.$parent.params,
+                useremark: this.useremark
+            }
+            console.log('====所有参数', this.$parent.$parent.$parent.$parent.params);
+            let res = await this.axios.post('/user/user_info', {...this.$parent.$parent.$parent.$parent.params})
             if(res.data.success){
                 this.$toast.success('提交成功')
             }

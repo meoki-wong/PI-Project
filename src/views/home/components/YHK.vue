@@ -19,7 +19,7 @@
             input-align="right"
         />
         <div class="commot-btn" @click="commitData">
-            <img src="../assets/img/commit.png" alt="">
+            <img src="../assets/img/next-step.png" alt="">
         </div>
     </div>
 </template>
@@ -37,10 +37,15 @@ export default {
     },
     methods: {
         async commitData(){
-            let res = await this.axios.post('/user/user_info', this.info)
-            if(res.data.success){
-                this.$toast.success('提交成功')
-            }
+            // let res = await this.axios.post('/user/user_info', this.info)
+            // if(res.data.success){
+            //     this.$toast.success('提交成功')
+            // }
+            document.querySelectorAll('.van-tab')[3].click()
+                this.$parent.$parent.$parent.$parent.params = {
+                ...this.info,
+                ...this.$parent.$parent.$parent.$parent.params
+                }
         }
     }
 }
