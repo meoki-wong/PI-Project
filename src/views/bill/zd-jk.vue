@@ -13,7 +13,7 @@
                     <p>到账金额（元）</p>
                 </div>
                 <div class="mqhk common">
-                    <p>{{((Number(borrowingBalance) + Number(borrowingBalance * dataList.dai_rate)) / 3).toFixed(2)}}</p>
+                    <p>{{( (Number(borrowingBalance) + Number(borrowingBalance) * dataList.dai_rate / 100) / borrowingMonth).toFixed(2)}}</p>
                     <p>每期还款（元）</p>
                 </div>
                 <div class="jkqx common">

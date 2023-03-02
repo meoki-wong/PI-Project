@@ -1,25 +1,6 @@
 <template>
   <div class="set-account-contain">
     <Navbar title="账号设置"/>
-    <van-collapse v-model="activeName" accordion>
-        <van-collapse-item class="set-pwd" title="修改密码" name="1">
-            <van-field
-            v-model="value"
-            label="旧密码"
-            placeholder="旧密码"
-            input-align="right"
-        />
-        <van-field
-            v-model="value"
-            label="新密码"
-            placeholder="新密码"
-            input-align="right"
-        />
-        <div class="commit-btn">
-            <img src="./assets/img/commit.png" alt="">
-        </div>
-        </van-collapse-item>
-    </van-collapse>
     <van-field
             class="version"
             v-model="value"
@@ -29,7 +10,7 @@
             input-align="right"
         />
         <div class="logout-btn">
-            <img src="./assets/img/logout.png" alt="">
+            <img @click="logout" src="./assets/img/logout.png" alt="">
         </div>
   </div>
 </template>
@@ -43,6 +24,12 @@ export default {
     data(){
         return {
             activeName: "1"
+        }
+    },
+    methods: {
+        logout(){
+            localStorage.removeItem('token')
+            this.$router.push('/login')
         }
     }
 }
@@ -82,7 +69,7 @@ export default {
     .logout-btn{
         position: absolute;
         left: 50%;
-        bottom: 39px;
+        margin-top: 15px;
         margin-left: -140px;
         img{
             width: 283px;

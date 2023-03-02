@@ -4,9 +4,9 @@
         <ul class="list">
             <li><span class="title">还款金额</span><span class="title">还款日期</span></li>
             <li
-                v-for="item in 3"
+                v-for="item in list"
                 :key="item"
-            ><span>16966.67</span><span>2023-03-12</span></li>
+            ><span>{{item.repayment_money}}</span><span>{{item.repayment_day}}</span></li>
         </ul>
     </div>
 </template>
@@ -16,7 +16,24 @@ import Navbar from '../components/NavBar.vue'
 export default {
     components: {
         Navbar
-    }
+    },
+    data() {
+        return {
+            list:{}
+        }
+    },
+    mounted(){
+      this.getData()
+    },
+    methods: {
+        async getData()
+        {
+            let res = await this.axios.get("user/repayment");
+            if(res.data.success){
+                this.list = res.data.data
+            }
+        }
+    },
 }
 </script>
 
