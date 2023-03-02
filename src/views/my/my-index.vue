@@ -10,7 +10,7 @@
                 <img src="./assets/img/avator.png" alt="">
                 <div class="own-info">
                     <p class="names">Hi,</p>
-                    <p class="phone">15922223333</p>
+                    <p class="phone">{{userInfo.username}}</p>
                 </div>
             </div>
             <img class="icon" src="./assets/img/setting-icon.png" alt="">
@@ -48,8 +48,12 @@ import { serviceList } from './utils/common'
 export default {
     data(){
         return {
-            serviceList
+            serviceList,
+            userInfo: {}
         }
+    },
+    mounted(){
+        this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     },
     methods: {
         goServer(item){

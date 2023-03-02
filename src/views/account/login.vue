@@ -58,7 +58,7 @@ export default {
             if(res.data.success){
                 let { token, user} = res.data.data
                 window.localStorage.token = res.data.data.token,
-                window.sessionStorage.userInfo = user
+                window.sessionStorage.userInfo = JSON.stringify(user)
                 this.$router.push('/')
             }
         },
