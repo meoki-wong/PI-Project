@@ -2,7 +2,7 @@
   <div id="app">
     <router-view class="route-view"/>
     <van-tabbar v-model="active" class="tabs-bar" >
-      <van-tabbar-item @click="$router.push('/home')">
+      <van-tabbar-item @click="$router.push('/')">
         <span>首页</span>
         <template #icon="props">
           <img class="common-img" src="./assets/home-icon.png" />
@@ -14,7 +14,7 @@
           <img class="common-img" src="./assets/zd-icon.png" />
         </template>
       </van-tabbar-item>
-      <van-tabbar-item>
+      <van-tabbar-item @click="$router.push('/kf')">
         <span>客服</span>
         <template #icon="props">
           <img class="common-img" src="./assets/kf-icon.png" />

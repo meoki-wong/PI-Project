@@ -77,7 +77,8 @@ export default {
             console.log('-res', res);
             let _this = this
             if(res.data.success){
-                let { dai_max_money, notices, user_info_status } = res.data.data
+                let { dai_max_money, notices, user_info_status, chat_url } = res.data.data
+                localStorage.setItem('chat_url', chat_url)
                 this.maxMoney = dai_max_money
                 this.notify = notices[this.timing]
                 this.userInfoStatus = user_info_status || 0

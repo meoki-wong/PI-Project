@@ -19,6 +19,13 @@ const routes = [
     title: "我的合同",
     component: () => import('../views/bill/zd-yjk-ckht.vue')
   },
+  // 客服
+  {
+    path: '/kf',
+    name: 'kf',
+    title: "客服",
+    component: () => import('../views/kf/index.vue')
+  },
   // 账单-已借款
   {
     path: '/myloan',
