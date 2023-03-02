@@ -97,7 +97,7 @@ export default {
                 0: "/loanPurpose",
                 1: "/loan"
             }
-            this.$router.push(pathObj[this.userInfoStatus + 1])
+            this.$router.push(pathObj[this.userInfoStatus])
         }
     }
 }
