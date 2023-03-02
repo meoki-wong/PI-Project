@@ -21,8 +21,8 @@
                 placeholder="请输入验证码"
             >
                 <template #input>
-                    <img class="id-card" :src="cardFront ? cardFront : require('../assets/img/idcard1.png')" alt="">
-                    <input type="file" class="upload-input" @change="inputPhoto($event, 'cardFront')">
+                    <img class="id-card" :src="info.cardpic1 ? info.cardpic1 : require('../assets/img/idcard1.png')" alt="">
+                    <input type="file" class="upload-input" @change="inputPhoto($event, 'cardpic1')">
                 </template>
             </van-field>
             <van-field
@@ -35,8 +35,8 @@
                 placeholder="请输入验证码"
             >
                 <template #input>
-                    <img class="id-card" :src="cardBack? cardBack: require('../assets/img/idcard2.png')" alt="">
-                    <input type="file" class="upload-input" @change="inputPhoto($event, 'cardBack')">
+                    <img class="id-card" :src="info.cardpic2? info.cardpic2: require('../assets/img/idcard2.png')" alt="">
+                    <input type="file" class="upload-input" @change="inputPhoto($event, 'cardpic2')">
                 </template>
             </van-field>
         <div class="commot-btn" @click="commitData">
@@ -47,6 +47,7 @@
 
 <script>
 export default {
+    name: "SFZ",
     props: {
         testData: {
             type: Object,
@@ -58,16 +59,12 @@ export default {
             info: {
                 realname: "",
                 cardnumber: "",
+                cardpic1: "", // 正面
+                cardpic2: "", // 反面
             },
-            cardFront: "", // 正面
-            cardBack: "", // 反面
+            
             value: '',
             sms: ""
-        }
-    },
-    watch: {
-        testData(val){
-            console.log('触发出发', val);
         }
     },
     methods: {
@@ -76,31 +73,30 @@ export default {
             var formData = new FormData();
             let res = await this.axios.post('/upload/index', {file: file[0]})
             if(res.data.success){
-                this[type] = res.data.data
+                this.info[type] = res.data.data
             }
 
         },
     
         async commitData(){
             // let res = await this.axios.post('/user/user_info', {
-            //     cardpic1: this.cardFront,
-            //     cardpic2: this.cardBack,
+            //     cardpic1: this.cardpic1,
+            //     cardpic2: this.cardpic2,
             //     ...this.info
             // })
             // if(res.data.success){
             //     this.$toast.success('提交成功')
             // }
             // this.$emit('sonData', {
-            //     cardFront: this.cardFront,
-            //     cardBack: this.cardBack,
+            //     cardpic1: this.cardpic1,
+            //     cardpic2: this.cardpic2,
             //     ...this.info
             //     })
                 // this.$parent.$parent.$parent.$parent.changeTabs('ZL')
                 document.querySelectorAll('.van-tab')[1].click()
-                this.$parent.$parent.$parent.$parent.params = {cardpic1: this.cardFront,
-                cardpic2: this.cardBack,
+                this.$parent.$parent.$parent.$parent.params = {
+                    ...this.$parent.$parent.$parent.$parent.params,
                 ...this.info,
-                ...this.$parent.$parent.$parent.$parent.params
                 }
         }
     }

@@ -2,7 +2,7 @@
 <template>
     <div class="jkyt-contain">
         <van-field
-            v-model="useremark"
+            v-model="info.useremark"
             label="借款用途"
             placeholder="借款用途"
             input-align="right"
@@ -17,14 +17,16 @@
 export default {
     data(){
         return {
-            useremark: ""
+            info: {
+                useremark: ""
+            }
         }
     },
     methods: {
         async commitData(){
             this.$parent.$parent.$parent.$parent.params = {
                 ...this.$parent.$parent.$parent.$parent.params,
-                useremark: this.useremark
+                useremark: this.info.useremark
             }
             console.log('====所有参数', this.$parent.$parent.$parent.$parent.params);
             let res = await this.axios.post('/user/user_info', {...this.$parent.$parent.$parent.$parent.params})

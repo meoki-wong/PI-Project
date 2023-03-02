@@ -57,8 +57,8 @@ export default{
             // }
                 document.querySelectorAll('.van-tab')[2].click()
                 this.$parent.$parent.$parent.$parent.params = {
+                    ...this.$parent.$parent.$parent.$parent.params,
                 ...this.info,
-                ...this.$parent.$parent.$parent.$parent.params
                 }
         }
     }

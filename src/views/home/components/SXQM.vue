@@ -26,7 +26,9 @@ export default {
              lineWidth: 6, // 画笔的线条粗细
              lineColor: "#000000", // 画笔的颜色
              bgColor: "#BEBEBE", // 画布的背景颜色
-             resultImg: "", // 最终画布生成的base64图片
+             info: {
+                signpic: "",
+             }, // 最终画布生成的base64图片
              isCrop: false, // 是否裁剪，在画布设定尺寸基础上裁掉四周空白部分
              
         }
@@ -37,11 +39,11 @@ export default {
                     .generate() // 使用生成器调用把签字的图片转换成为base64图片格式
                     .then(async (res) => {
                     let item = await this.axios.post('/upload/index', {file: this.base64ToFile(res)})
-                    this.resultImg = item.data.data
+                    this.info.signpic = item.data.data
                     
                     document.querySelectorAll('.van-tab')[4].click()
                     this.$parent.$parent.$parent.$parent.params = {
-                    signpic: this.resultImg,
+                    signpic: this.info.signpic,
                     ...this.$parent.$parent.$parent.$parent.params
                     }
                     })

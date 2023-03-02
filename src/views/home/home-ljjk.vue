@@ -3,7 +3,7 @@
     <Navbar :title="navTitle.title"/>
     <van-tabs type="card" @change="changeTabs">
         <van-tab :title="item.title" :name="item.type" v-for="(item, index) in tabsList" :key="index">
-            <component :is="list" :testData="params"></component>
+            <component :is="list" ref="childredRef"></component>
         </van-tab>
     </van-tabs>
   </div>
@@ -14,13 +14,6 @@ import Navbar from '../components/NavBar.vue'
 export default {
     components: {
         Navbar,
-    },
-    data(){
-        return {
-            params: {
-
-            }
-        }
     },
     mounted(){
         this.getData()
@@ -36,18 +29,30 @@ export default {
                 {title: '借款用途', type: "JKYT"}
             ],
             list: () => import('./components/SFZ.vue'),
-            navTitle: "身份证"
+            navTitle: "身份证",
+            params: {
+
+            }
         }
     },
     methods: {
         changeTabs(e){
             this.list = () => import(`./components/${e}.vue`)
             this.navTitle = this.tabsList.find(item=> item.type == e)
+            setTimeout(() => {
+                this.$refs.childredRef.forEach(item=>{
+                item.info = this.params
+            })
+            }, 0);
+            
             
         },
         async getData(){
             let res = await this.axios.get('/user/user_info')
-            console.log('====res', res);
+            if(res.data.success){
+                this.params = res.data.data.user_info
+                this.changeTabs('SFZ')
+            }
 
         },
     }
