@@ -46,6 +46,12 @@ const routes = [
     title: "我的借款",
     component: () => import('../views/bill/zd-jk.vue')
   },
+  {
+    path: '/loanDetail',
+    name: 'loanDetail',
+    title: "资金明细",
+    component: () => import('../views/my/my-zjmx.vue')
+  },
   // 我的-钱包
   {
     path: '/wallet',

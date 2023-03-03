@@ -17,7 +17,7 @@
     </div>
     <div class="opt-box">
             <img src="./assets/img/tixian-btn.png" alt="">
-            <img src="./assets/img/mingxi-btn.png" alt="">
+            <img src="./assets/img/mingxi-btn.png" alt="" @click="loadDetail">
     </div>
     <div class="bank-card-title">
         <img src="./assets/img/card-icon.png" alt="">
@@ -53,6 +53,11 @@ import Navbar from '../components/NavBar.vue'
 export default {
     components: {
         Navbar
+    },
+    methods: {
+        loanDetail(){
+            this.$router.push('/loanDetail')
+        }
     }
 }
 </script>
