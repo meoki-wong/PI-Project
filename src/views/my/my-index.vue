@@ -18,7 +18,7 @@
         <div class="bottom-box">
             <div class="common">
                 <p>账户余额（元）</p>
-                <p>{{username.balance}}</p>
+                <p>{{dataObject.balance}}</p>
             </div>
             <div class="common">
                 <p>最近借款（元）</p>
