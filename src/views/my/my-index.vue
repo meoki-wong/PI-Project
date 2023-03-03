@@ -10,7 +10,7 @@
                 <img src="./assets/img/avator.png" alt="">
                 <div class="own-info">
                     <p class="names">Hi,</p>
-                    <p class="phone">{{userInfo.username}}</p>
+                    <p class="phone">{{dataObject.username}}</p>
                 </div>
             </div>
             <img class="icon" src="./assets/img/setting-icon.png" alt="" @click="goSetting">
@@ -18,11 +18,11 @@
         <div class="bottom-box">
             <div class="common">
                 <p>账户余额（元）</p>
-                <p>0.00</p>
+                <p>{{username.balance}}</p>
             </div>
             <div class="common">
                 <p>最近借款（元）</p>
-                <p>0.00</p>
+                <p>{{dataObject.borrowmoney}}</p>
             </div>
         </div>
         <!-- 常用服务 -->
@@ -49,11 +49,13 @@ export default {
     data(){
         return {
             serviceList,
-            userInfo: {}
+            userInfo: {},
+            dataObject: {}
         }
     },
     mounted(){
         this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+        this.getData()
     },
     methods: {
         goServer(item){
@@ -64,6 +66,10 @@ export default {
         },
         goSetting(){
             this.$router.push('/setAccount')
+        },
+        async getData(){
+            let res = await this.axios.get('/user/index')
+            this.dataObject = res.data.data
         }
     }
 }

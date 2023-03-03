@@ -23,6 +23,11 @@ Vue.prototype.axios = axiosInstance
 // 请求拦截
 let requestWhiteList = ['/login', '/register', '/getFullViews', '/getUniqueViews'] // 请求白名单
 axiosInstance.interceptors.request.use((config) => {
+    Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: "加载中..."
+    });
     if (requestWhiteList.includes(config.url)) {
         return config
     }
@@ -53,6 +58,7 @@ axiosInstance.interceptors.request.use((config) => {
 
 // 响应拦截
 axiosInstance.interceptors.response.use((config) => {
+    Toast.clear()
     let { status, statusText, data } = config
     if (!data.success) {
         Toast.fail(data.msg || data.data)
