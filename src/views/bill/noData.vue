@@ -1,6 +1,5 @@
 <template>
   <div class="no-data-contain">
-    <Navbar title="我的借款"/>
     <img src="./asset/img/noData.png" alt="">
     <p class="tips">暂无借款记录</p>
   </div>

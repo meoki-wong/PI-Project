@@ -2,7 +2,7 @@
   <div class="my-contain">
     <div class="top-info">
         <div class="opt-box">
-            <img src="./assets/img/service-icon.png" alt="">
+            <img @click="checkKF" src="./assets/img/service-icon.png" alt="">
             <img src="./assets/img/msg-icon.png" alt="">
         </div>
         <div class="middle-box">
@@ -58,6 +58,9 @@ export default {
     methods: {
         goServer(item){
             this.$router.push(item.path)
+        },
+        checkKF(){
+            this.$router.push('/kf')
         }
     }
 }

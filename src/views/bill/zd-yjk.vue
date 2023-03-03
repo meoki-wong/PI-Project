@@ -1,7 +1,7 @@
 <template>
   <div class="my-loan-contain">
     <Navbar title="我的借款" />
-    <div class="loan-box">
+    <div class="loan-box" v-if="!isShowData">
       <div class="loan-info">
         <!-- <div class="num">借款编号：202302120001215454</div> -->
         <div class="date-num">
@@ -27,6 +27,7 @@
         <p class="info">{{ orderremark }}</p>
       </div>
     </div>
+    <NoData v-else />
   </div>
 </template>
 
@@ -35,6 +36,7 @@ import Navbar from "../components/NavBar.vue";
 export default {
   components: {
     Navbar,
+    NoData: () => import('./noData.vue')
   },
   data() {
     return {
@@ -42,6 +44,7 @@ export default {
       stages: 0,
       orderstatus: "",
       orderremark: "",
+      isShowData: false
     };
   },
   mounted() {
@@ -52,7 +55,8 @@ export default {
       let res = await this.axios.get("/borrow/myloan");
       // let _that = this
       if (res == undefined) {
-        this.$router.push("/myloan-nodata");
+        // this.$router.push("/myloan-nodata");
+        this.isShowData = true
       }
       if (res.data.success) {
         this.borrowmoney = res.data.data.borrowmoney;
