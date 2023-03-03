@@ -17,7 +17,7 @@
     </div>
     <div class="opt-box">
             <img src="./assets/img/tixian-btn.png" alt="">
-            <img src="./assets/img/mingxi-btn.png" alt="" @click="loadDetail">
+            <img src="./assets/img/mingxi-btn.png" alt="" @click="loanDetail">
     </div>
     <div class="bank-card-title">
         <img src="./assets/img/card-icon.png" alt="">
