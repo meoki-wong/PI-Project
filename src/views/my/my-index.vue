@@ -3,7 +3,7 @@
     <div class="top-info">
         <div class="opt-box">
             <img @click="checkKF" src="./assets/img/service-icon.png" alt="">
-            <img src="./assets/img/msg-icon.png" alt="">
+            <img @click="checkKF" src="./assets/img/msg-icon.png" alt="">
         </div>
         <div class="middle-box">
             <div class="info">

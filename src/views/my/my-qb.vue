@@ -3,20 +3,20 @@
     <Navbar title="钱包"/>
     <div class="asset-info">
         <div class="title">我的资产（元）</div>
-        <div class="number">0.00</div>
+        <div class="number">{{dataObject.balance}}</div>
     </div>
     <div class="quota-box">
         <div class="common">
             <p>我的借款（元）</p>
-            <p>0.00</p>
+            <p>{{dataObject.balance}}</p>
         </div>
         <div class="common">
             <p>可提现额度（元）</p>
-            <p>0.00</p>
+            <p>{{dataObject.balance}}</p>
         </div>
     </div>
     <div class="opt-box">
-            <img src="./assets/img/tixian-btn.png" alt="">
+            <img src="./assets/img/tixian-btn.png" alt="" @click="getMoney">
             <img src="./assets/img/mingxi-btn.png" alt="" @click="loanDetail">
     </div>
     <div class="bank-card-title">
@@ -27,11 +27,11 @@
         <ul>
             <li>
                 <span class="title">姓名</span>
-                <span class="inner">未绑定</span>
+                <span class="inner">{{ dataObject.realname|| '未绑定'}}</span>
             </li>
             <li>
                 <span class="title">卡号</span>
-                <span class="inner">**** **** **** **** 0000</span>
+                <span class="inner">{{dataObject.banknumber || '未绑定'}}</span>
             </li>
         </ul>
     </div>
@@ -54,7 +54,30 @@ export default {
     components: {
         Navbar
     },
+    data(){
+        return {
+            dataObject: {},
+        }
+    },
+    mounted(){
+        this.getData()
+    },
     methods: {
+        async getData(){
+            let { balance, realname, banknumber} = JSON.parse(sessionStorage.getItem(userInfo))
+            let res = await this.axios.get(`/user/withdraw?balance=${balance}&realname=${realname}&banknumber=${banknumber}`)
+            if(res.data.success){
+                this.dataObject = res.data.data
+            }
+        },
+        // 提现
+        async getMoney(){
+            let res = await this.axios.post('/user/withdraw', {money: dataObject.balance})
+            if(res.data.success){
+                this.$toast.success('提交成功')
+            }
+        },
+
         loanDetail(){
             this.$router.push('/loanDetail')
         }
