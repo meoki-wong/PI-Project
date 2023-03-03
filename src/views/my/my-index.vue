@@ -13,7 +13,7 @@
                     <p class="phone">{{userInfo.username}}</p>
                 </div>
             </div>
-            <img class="icon" src="./assets/img/setting-icon.png" alt="">
+            <img class="icon" src="./assets/img/setting-icon.png" alt="" @click="goSetting">
         </div>
         <div class="bottom-box">
             <div class="common">
@@ -61,6 +61,9 @@ export default {
         },
         checkKF(){
             this.$router.push('/kf')
+        },
+        goSetting(){
+            this.$router.push('/setAccount')
         }
     }
 }
