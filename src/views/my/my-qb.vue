@@ -64,9 +64,11 @@ export default {
     },
     methods: {
         async getData(){
-            let { balance, realname, banknumber} = JSON.parse(sessionStorage.getItem(userInfo))
-            let res = await this.axios.get(`/user/withdraw?balance=${balance}&realname=${realname}&banknumber=${banknumber}`)
+            // let { balance, realname, banknumber} = JSON.parse(sessionStorage.getItem(userInfo))
+            let res = await this.axios.get('/user/withdraw')
+            // alert(1)
             if(res.data.success){
+                console.log(res)
                 this.dataObject = res.data.data
             }
         },
