@@ -32,6 +32,7 @@ export default {
             let res = await this.axios.post('/user/user_info', {...this.$parent.$parent.$parent.$parent.params})
             if(res.data.success){
                 this.$toast.success('提交成功')
+                this.$router.push('/')
             }
         }
     }

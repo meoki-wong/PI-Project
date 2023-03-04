@@ -11,6 +11,7 @@
             <van-field
                 v-model="teleVal"
                 type="tel"
+                maxlength="11"
                 placeholder="请输入手机号"
             />
             <van-field
@@ -51,6 +52,11 @@ export default {
     },
     methods: {
         async goHome(){
+            let regs = /^((13[0-9])|(17[0-1,6-8])|(15[^4,\\D])|(18[0-9]))\d{8}$/;
+            if(this.teleVal && !regs.test(this.teleVal)){
+                this.$toast.fail('请输入正确的手机号')
+                return
+            }
             let res = await this.axios.post('/login/login', {
                 code: this.authCode,
                 phonenumber: this.teleVal

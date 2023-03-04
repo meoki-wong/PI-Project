@@ -24,7 +24,6 @@ export default {
   },
   mounted() {
     this.getData()
-    console.log("----this", this.$router.options.routes[this.$route.path]);
   },
   methods:{
     async getData(){

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view class="route-view"/>
-    <van-tabbar v-model="active" class="tabs-bar" >
+    <van-tabbar v-model="active" class="tabs-bar" v-if="isShowBar">
       <van-tabbar-item @click="$router.push('/')">
         <span>首页</span>
         <template #icon="props">
@@ -38,8 +38,20 @@ export default {
   },
   data(){
     return {
-      active: 0
+      active: 0,
+      isShowBar: true,
+      routerList: ['/kf', '/login']
     }
+  },
+  watch: {
+    '$route.path': {
+      handler(val){
+        this.isShowBar = this.routerList.includes(this.$route.path) ? false : true
+      },
+      immediate: true
+    }
+  },
+  mounted(){
   }
 }
 </script>
