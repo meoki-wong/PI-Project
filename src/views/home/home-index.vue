@@ -7,10 +7,10 @@
       </div>
       <div class="top-title">让信用不负期待</div>
       <div class="info-box">
-        <p class="title">最高借款额度（元）</p>
+        <p class="title">{{borrowStatus ? '可提现金额' : '最高借款额度'}}（元）</p>
         <div class="inner">
           <p>{{ maxMoney }}</p>
-          <div @click="immediateLoan">立即借款</div>
+          <div @click="immediateLoan">{{borrowStatus ? '立即提现' : '立即借款'}}</div>
         </div>
         <p class="desc">最低利率 0.02% （年化利率 0.73%）</p>
       </div>
@@ -64,6 +64,7 @@ export default {
       notify: "", // 广播
       timing: 0, // 计数器
       userInfoStatus: 0, // 状态
+      borrowStatus: 0
     };
   },
   mounted() {
@@ -75,16 +76,21 @@ export default {
       console.log("-res", res);
       let _this = this;
       if (res.data.success) {
-        let { dai_max_money, notices, user_info_status, chat_url } =
+        let { dai_max_money, notices, user_info_status, chat_url, borrow_status, balance } =
           res.data.data;
         localStorage.setItem("chat_url", chat_url);
-        this.maxMoney = dai_max_money;
+        this.maxMoney = borrow_status ?balance : dai_max_money;
         // console.log(notices)
         this.notify = notices.join("  ");
         this.userInfoStatus = user_info_status || 0;
+        this.borrowStatus = borrow_status || 0
       }
     },
     immediateLoan() {
+      if(this.borrowStatus){
+        this.$router.push('/wallet')
+        return 
+      }
       let pathObj = {
         0: "/loanPurpose",
         1: "/loan",
