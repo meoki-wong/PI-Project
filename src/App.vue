@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view class="route-view"/>
-    <van-tabbar v-model="active" class="tabs-bar" v-if="isShowBar">
+    <!-- <van-tabbar v-model="active" class="tabs-bar" v-if="isShowBar">
       <van-tabbar-item @click="$router.push('/')">
         <span>首页</span>
         <template #icon="props">
@@ -26,7 +26,7 @@
           <img class="common-img" :src="!props.active ? require('./assets/my-icon.png'): require('./assets/my-check.png')" />
         </template>
       </van-tabbar-item>
-    </van-tabbar>
+    </van-tabbar> -->
   </div>
 </template>
 

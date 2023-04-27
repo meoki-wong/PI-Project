@@ -61,9 +61,9 @@ const routes = [
   },
   // 我的-查看还款
   {
-    path: '/checkRepayment',
-    name: 'checkRepayment',
-    title: "查看还款",
+    path: '/extract',
+    name: 'extract',
+    title: "提现",
     component: () => import('../views/my/my-ckhk.vue')
   },
   // 我的-设置-账号设置

@@ -1,7 +1,13 @@
 <template>
     <div class="login-contain">
-        <Navbar title="注册账号"/>
-        <div class="opt-area">
+        <Navbar title="注册/登录"/>
+        <div class="logo">
+            <img
+                src="../../assets/logos.jpg"
+                alt="logo位置"
+            >
+        </div>
+        <div class="opt-area" v-if="isShowRegister">
             <van-field
                 v-model="teleVal"
                 type="tel"
@@ -16,8 +22,11 @@
             >
             </van-field>
         </div>
-        <div class="login-btn" @click="goHome">
-            <img src="../account/assets/img/login-btn.png" alt="">
+        <div v-if="isShowRegister" class="login-btn" @click="goHome">
+            <img src="./assets/img/login-btn.png" alt="">
+        </div>
+        <div v-else class="login-btn" @click="getLoginInfo">
+            <img src="./assets/img/login-btn.png" alt="">
         </div>
     </div>
 </template>
@@ -35,11 +44,12 @@ export default {
             isSend: false,
             teleVal: "", // 手机号
             authCode: "", // 验证码
+            isShowRegister: false, // 是否显示注册按钮进行注册
             piUserInfo: {} // pi浏览器登录信息
         }
     },
     mounted() {
-        this.getLoginInfo()
+        
     },
     methods: {
         async goHome(){
@@ -54,6 +64,10 @@ export default {
                     password: this.authCode
                 })
             if(res.data.success){
+                // let { token, user} = res.data.data
+                // window.localStorage.token = res.data.data.token,
+                window.token = 'true'
+                window.sessionStorage.setItem('userInfo', JSON.stringify(this.piUserInfo))
                 this.$router.push('/my')
             }
         },
@@ -61,10 +75,21 @@ export default {
             const scopes = ['username', 'payments'];
             let authResult = await window.Pi.authenticate(scopes, this.onIncompletePaymentFound);
             if(authResult.user.uid){
-                this.piUserInfo = {
+                let res = await this.axios.post('/searchUserInfo',{
+                    pi_uuid: authResult.user.uid
+                })
+                console.log('-----res', res.data.code);
+                if(res.data.code == 200){
+                    window.token = 'true'
+                    this.$router.push('/my')
+                } else {
+                    this.piUserInfo = {
                         pi_uuid: authResult.user.uid,
                         pi_username: authResult.user.username
                     }
+                    this.isShowRegister = true
+                    console.log('---this.isShowRegister', this.isShowRegister);
+                }
             }
         },
         onIncompletePaymentFound(payment) {
@@ -76,5 +101,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../account/assets/css/login.less";
+@import "./assets/css/login.less";
 </style>

@@ -1,141 +1,152 @@
 <template>
-    <div class="loan-contain">
-        <Navbar title="借款" />
-        <div class="loan-top">
-            <div class="title">借款金额</div>
-            <p class="count"><span>{{borrowingBalance}}</span><span><img
-                        src="./asset/img/edit-btn.png"
-                        alt=""
-                    ></span></p>
-            <div class="info">
-                <div class="dzje common">
-                    <p>{{borrowingBalance}}</p>
-                    <p>到账金额（元）</p>
-                </div>
-                <div class="mqhk common">
-                    <p>{{( (Number(borrowingBalance) + Number(borrowingBalance) * dataList.dai_rate / 100) / borrowingMonth).toFixed(2)}}</p>
-                    <p>每期还款（元）</p>
-                </div>
-                <div class="jkqx common">
-                    <p> {{borrowingMonth}}</p>
-                    <p>借款期限（个月）</p>
-                </div>
-            </div>
+    <div class="wallet-contain">
+        <Navbar title="钱包" />
+        <div class="asset-info">
+            <div class="title">我的余额</div>
+            <div class="number">{{ balance || 0 }}</div>
         </div>
-        <div class="loan-middle">
-            <div class="title">
-                <img
-                    src="./asset/img/cash-icon.png"
-                    alt=""
-                >
-                借款金额
-            </div>
-            <div class="opt-box">
-                <van-slider
-                    v-model="borrowingBalance"
-                    @change="onChange"
-                    :min="dataList.dai_min_money"
-                    :max="dataList.dai_max_money"
-                />
-                <p class="range">
-                    <span class="number">{{dataList.dai_min_money}}</span>
-                    <span class="touch">拖动调整额度</span>
-                    <span class="number">{{dataList.dai_max_money}}</span>
-                </p>
-            </div>
+        <div class="quota-box">
+            <van-field
+                v-model="userName"
+                type="number"
+                placeholder="请输入转账账户(手机号)"
+            />
         </div>
-        <div class="loan-bottom">
-            <div class="title">
-                <img
-                    src="./asset/img/date-icon.png"
-                    alt=""
-                >
-                期限
-            </div>
-            <ul class="month-list">
-                <li v-for="(item, index) in dataList.dai_months" :class="selectMonth === index? 'li_active' : ''" :key="item" @click="clickMonth(item, index)">{{item}}个月</li>
-            </ul>
+        <div class="quota-box">
+            <van-field
+                v-model="balanceVal"
+                type="number"
+                placeholder="请输入转账金额"
+            />
         </div>
-        <div class="apply">
-            <img
-                @click="showDialog"
-                src="./asset/img/apply-btn.png"
-                alt=""
-            >
+        <div class="opt-box">
+            <div
+                class="cz-btn"
+                @click="orderProduct"
+            >发起转账</div>
         </div>
-
-        <van-action-sheet
-            v-model="show"
-            title="核对订单"
-        >
-            <div class="content">
-                <ul>
-                    <li><span class="title">借款金额</span><span class="inner">{{borrowingBalance}}</span></li>
-                    <li><span class="title">还款金额</span><span class="inner">{{Number(Number(borrowingBalance) + Number(borrowingBalance * dataList.dai_rate)).toFixed(2)}}</span></li>
-                    <li><span class="title">借款期限</span><span class="inner">{{borrowingMonth}}个月</span></li>
-                    <li><span class="title">收款银行</span><span class="inner">{{dataList.bankname}}</span></li>
-                    <li><span class="title">收款卡号</span><span class="inner">{{dataList.banknumber}}</span></li>
-                </ul>
-                <div class="confirm-btn" @click="confirmClick">
-                    <img src="./asset/img/confirm-btn.png" alt="">
-                </div>
-            </div>
-        </van-action-sheet>
     </div>
 </template>
 
 <script>
-import Navbar from '../components/NavBar.vue'
+import Navbar from "../components/NavBar.vue";
 export default {
     components: {
-        Navbar
+        Navbar,
     },
-    mounted(){
-        this.getData()
-    },
-    data(){
+    data() {
         return {
-            show: false,
-            value: 0,
-            dataList: [], // 参数列表
-            borrowingBalance: 0, //借款金额
-            borrowingMonth:  3,
-            selectMonth: 0,
-        }
+            balance: '',
+            balanceVal: "", // 转账金额
+            userName: "", // 转账用户手机号、账号
+            config: {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                },
+            },
+            user: "",
+        };
+    },
+    mounted() {
+        this.getUserInfo();
     },
     methods: {
-        showDialog(){
-            this.show = true
-        },
-        onChange(e){
-            console.log(e);
-        },
-        async getData(){
-            let res = await this.axios.get('/borrow/index')
-            if(res.data.success){
-                this.dataList = res.data.data
-                this.borrowingMonth = this.dataList.dai_init_months
-                this.borrowingBalance = this.dataList.dai_min_money || 0
+      async getAccount(){
+            let pi_uuid
+            if (window.parent === window.self) {
+                pi_uuid = JSON.parse(localStorage.getItem('userInfo')).pi_uuid
+            } else {
+                pi_uuid = this.user.uid
             }
-        },
-        clickMonth(item, index){
-            this.selectMonth = index
-            this.borrowingMonth = item
-        },
-        async confirmClick(){
-            let res = await this.axios.post('/borrow/index', {
-                borrowmoney: this.borrowingBalance,
-                stages: this.borrowingMonth
+            let res = await this.axios.post('/findAccount', {
+                pi_uuid
             })
-            if(res.data.success){
-                this.$toast.success('借款成功')
-                this.show = false
+            if(res.data.code == 200){
+                this.balance = res.data.data.balance
             }
-        }
-    }
-}
+        },
+        async getUserInfo() {
+            let scopes = ['username', 'payments'];
+            if (window.parent !== window.self) {
+                const authResult = await window.Pi.authenticate(
+                    scopes,
+                    this.onIncompletePaymentFound()
+                );
+                this.user = authResult.user || "";
+            }
+        },
+        async orderProduct(memo, metadata) {
+            if(!this.balanceVal){
+                this.$toast.fail('转账金额不能为空')
+                return
+            }
+            if(Number(this.balanceVal) > Number(this.balance)){
+                this.$toast.fail('转账金额不能大于账户余额')
+                return
+            }
+            let res = await this.axios.post('/transferMoney', {
+                userName: this.userName,
+                balanceVal: this.balanceVal,
+                pi_uuid: this.user.uuid || JSON.parse(window.localStorage.getItem('userInfo')).pi_uuid
+            })
+            if(res.data.code == 200){
+                this.$toast.success('转账成功')
+            }
+        },
+        onIncompletePaymentFound(payment) {
+            console.log("onIncompletePaymentFound", payment);
+            return this.axios.post("/payments/incomplete", { payment });
+        },
+
+        onReadyForServerApproval(paymentId) {
+            console.log("onReadyForServerApproval", paymentId);
+            this.axios.post("/payments/approve", { paymentId }, this.config);
+        },
+
+        onReadyForServerCompletion(paymentId, txid) {
+            console.log("onReadyForServerCompletion", paymentId, txid);
+            this.axios.post(
+                "/payments/complete",
+                { paymentId, txid },
+                this.config
+            );
+        },
+
+        onCancel(paymentId) {
+            console.log("onCancel", paymentId);
+            return this.axios.post("/payments/cancelled_payment", {
+                paymentId,
+            });
+        },
+
+        onError(error, payment) {
+            console.log("onError", error);
+            if (payment) {
+                console.log(payment);
+                // handle the error accordingly
+            }
+        },
+    },
+};
 </script>
 
 <style lang="less" scoped>
-@import "./asset/css/zd-jk.less";
+@import "../my/assets/css/my-qb.less";
+.cz-btn {
+    width: 300px;
+    height: 60px;
+    border-radius: 14px;
+    background-color: #ff3939;
+    font-weight: 500;
+    font-size: 18px;
+    color: #fffbfb;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.quota-box{
+
+}
 </style>

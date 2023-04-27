@@ -3,11 +3,11 @@
         <Navbar title="注册/登录"/>
         <div class="logo">
             <img
-                :src="logo"
+                src="../../assets/logos.jpg"
                 alt="logo位置"
             >
         </div>
-        <div class="opt-area">
+        <div class="opt-area" v-if="isShowRegister">
             <van-field
                 v-model="teleVal"
                 type="tel"
@@ -18,15 +18,14 @@
                 v-model="authCode"
                 center
                 clearable
-                placeholder="请输入验证码"
-                disabled
+                placeholder="请输入密码"
             >
-                <template #button>
-                    <div class="sms-btn" @click="sendSMSCode">{{'发送验证码'}}</div>
-                </template>
             </van-field>
         </div>
-        <div class="login-btn" @click="goHome">
+        <div v-if="isShowRegister" class="login-btn" @click="goHome">
+            <img src="./assets/img/login-btn.png" alt="">
+        </div>
+        <div v-else class="login-btn" @click="getLoginInfo">
             <img src="./assets/img/login-btn.png" alt="">
         </div>
     </div>
@@ -45,10 +44,16 @@ export default {
             isSend: false,
             teleVal: "", // 手机号
             authCode: "", // 验证码
+            isShowRegister: false, // 是否显示注册按钮进行注册
+            piUserInfo: {} // pi浏览器登录信息
         }
     },
     mounted() {
-        this.getLogo()
+        if(window.parent === window.self){
+            this.isShowRegister = true
+        } else {
+            this.isShowRegister = false
+        }
     },
     methods: {
         async goHome(){
@@ -57,34 +62,27 @@ export default {
                 this.$toast.fail('请输入正确的手机号')
                 return
             }
-            let res = await this.axios.post('/login/login', {
-                code: this.authCode,
-                phonenumber: this.teleVal
-            })
+            let res = await this.axios.post('/login', {
+                    userName: this.teleVal,
+                    password: this.authCode
+                })
             if(res.data.success){
-                let { token, user} = res.data.data
-                window.localStorage.token = res.data.data.token,
-                window.sessionStorage.userInfo = JSON.stringify(user)
-                this.$router.push('/')
+                window.localStorage.setItem('token', res.data.data.token)
+                window.localStorage.setItem('userInfo', JSON.stringify(res.data.data.userInfo))
+                this.$router.push('/my')
             }
         },
-        async getLogo(){
-            let res = await this.axios.get('/login/logo')
-            if(res.data.success){
-                console.log('logo', res.data.logo);
-                this.logo = res.data.data.logo || ''
+        async getLoginInfo(){
+            const scopes = ['username', 'payments'];
+            let authResult = await window.Pi.authenticate(scopes, this.onIncompletePaymentFound);
+            if(authResult.user.uid){
+                this.$router.push('/my')
             }
         },
-        async sendSMSCode(){
-            if(this.isSend) return 
-            let _this = this
-            let res = await this.axios.post('/login/sendmsg', {
-                phonenumber: this.teleVal
-            })
-            if(res.data.success){
-                this.authCode = res.data.data.code
+        onIncompletePaymentFound(payment) {
+                console.log("onIncompletePaymentFound", payment);
+                return this.axios.post('/payments/incomplete', {payment});
             }
-        }
     }
 }
 </script>

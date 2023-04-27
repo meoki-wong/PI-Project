@@ -9,7 +9,8 @@ import Vue from 'vue'
 
 let axiosInstance = axios.create({
     // baseURL: process.env.NODE_ENV === 'production' ?
-    baseURL: 'http://107.182.25.77:3988/api',
+    // baseURL: 'https://pitest.pist.top/pi_api',
+    baseURL: 'http://localhost:10089/pi_api',
     timeout: 15 * 1000, // 设置请求超时时间
     retryDelay: 1000, // 超时请求
     retry: 4, // 超时重新触发请求次数
@@ -36,19 +37,13 @@ axiosInstance.interceptors.request.use((config) => {
         config.headers = {}
     } else {
         // 区分上传接口和普通接口
-        if (config.url === "/upload/index") {
-            //以formData上传时请求头Content-Type类型要改为multipart/form-data
-            config.headers['Content-Type'] = "multipart/form-data";
-        } 
-        else {
-            config.headers['Content-Type'] = 'application/json';
-        }
         config.headers.token = token 
         // 暂时不能使用中文做中文名  header不能写入中文  需要传入时进行过滤  后期做处理
         // config.headers = {
         //     authorization: token,
         // }
     }
+    
     return config
 }, (err) => {
     Toast.fail(err)
@@ -62,8 +57,8 @@ axiosInstance.interceptors.response.use((config) => {
     let { status, statusText, data } = config
     if (!data.success) {
         Toast.fail(data.msg || data.data)
-        return
     }
+    console.log('====响应数据', config);
     return config
 }, (err) => {
     // 设置超时请求

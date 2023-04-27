@@ -4,6 +4,7 @@ const pxtorem = require('postcss-pxtorem'); // 可以把px自动切换为rem，�
 const config = {
     outputDir: 'dist',
     publicPath: './',
+    productionSourceMap: true,
     css: {
         loaderOptions: {
             postcss: {
