@@ -1,6 +1,6 @@
 <template>
     <div class="wallet-contain">
-        <Navbar title="钱包" />
+        <Navbar title="充值" />
         <div class="asset-info">
             <div class="title">我的余额</div>
             <div class="number">{{ Number(balance) || 0 }}</div>

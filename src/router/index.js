@@ -82,7 +82,7 @@ const routes = [
   },
   // 我的-首页
   {
-    path: '/my',
+    path: '/',
     name: 'my',
     title: "关于我们",
     component: () => import('../views/my/my-index.vue')
@@ -95,12 +95,12 @@ const routes = [
     component: () => import('../views/my/my-zjmx.vue')
   },
   // 首页
-  {
-    path: '/',
-    name: 'home',
-    title: "首页",
-    component: () => import('../views/home/home-index.vue')
-  },
+  // {
+  //   path: '/',
+  //   name: 'home',
+  //   title: "首页",
+  //   component: () => import('../views/home/home-index.vue')
+  // },
   // 首页-立即借款-借款用途
   {
     path: '/loanPurpose',

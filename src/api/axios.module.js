@@ -9,8 +9,8 @@ import Vue from 'vue'
 
 let axiosInstance = axios.create({
     // baseURL: process.env.NODE_ENV === 'production' ?
-    // baseURL: 'https://pitest.pist.top/pi_api',
-    baseURL: 'http://localhost:10089/pi_api',
+    baseURL: 'https://pitest.pist.top/pi_api',
+    // baseURL: 'http://localhost:10089/pi_api',
     timeout: 15 * 1000, // 设置请求超时时间
     retryDelay: 1000, // 超时请求
     retry: 4, // 超时重新触发请求次数

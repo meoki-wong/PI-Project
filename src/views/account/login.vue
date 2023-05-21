@@ -69,14 +69,15 @@ export default {
             if(res.data.success){
                 window.localStorage.setItem('token', res.data.data.token)
                 window.localStorage.setItem('userInfo', JSON.stringify(res.data.data.userInfo))
-                this.$router.push('/my')
+                this.$router.push('/')
             }
         },
         async getLoginInfo(){
             const scopes = ['username', 'payments'];
             let authResult = await window.Pi.authenticate(scopes, this.onIncompletePaymentFound);
             if(authResult.user.uid){
-                this.$router.push('/my')
+                window.server = authResult.user.uid
+                this.$router.push('/')
             }
         },
         onIncompletePaymentFound(payment) {

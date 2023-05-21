@@ -68,7 +68,7 @@ export default {
                 // window.localStorage.token = res.data.data.token,
                 window.token = 'true'
                 window.sessionStorage.setItem('userInfo', JSON.stringify(this.piUserInfo))
-                this.$router.push('/my')
+                this.$router.push('/')
             }
         },
         async getLoginInfo(){
@@ -81,7 +81,7 @@ export default {
                 console.log('-----res', res.data.code);
                 if(res.data.code == 200){
                     window.token = 'true'
-                    this.$router.push('/my')
+                    this.$router.push('/')
                 } else {
                     this.piUserInfo = {
                         pi_uuid: authResult.user.uid,

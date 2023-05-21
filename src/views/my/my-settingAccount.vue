@@ -54,7 +54,7 @@ export default {
                     password: this.authCode
                 })
             if(res.data.success){
-                this.$router.push('/my')
+                this.$router.push('/')
             }
         },
         async getLoginInfo(){
