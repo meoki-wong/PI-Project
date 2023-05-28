@@ -10,7 +10,7 @@
                 <img src="./assets/img/avator.png" alt="">
                 <div class="own-info">
                     <p class="names">Hi,</p>
-                    <p class="phone">{{userInfo.pi_username}}</p>
+                    <p class="phone">{{userInfo.pi_username || userName}}</p>
                 </div>
             </div>
             <img class="icon" src="./assets/img/setting-icon.png" alt="" @click="goSetting">
@@ -51,7 +51,8 @@ export default {
         return {
             serviceList,
             userInfo: {},
-            balance: 0
+            balance: 0,
+            userName: ""
         }
     },
     async mounted(){
@@ -66,6 +67,7 @@ export default {
                 this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
                 pi_uuid = JSON.parse(localStorage.getItem('userInfo')).pi_uuid
             } else {
+                this.userName = window.userInfo.username 
                 pi_uuid = this.user.uid
             }
             let res = await this.axios.post('/findAccount', {
@@ -85,6 +87,10 @@ export default {
                 this.user = authResult.user || "";
             }
         },
+        onIncompletePaymentFound(payment) {
+                console.log("onIncompletePaymentFound", payment);
+                return this.axios.post('/payments/incomplete', {payment});
+            },
         goServer(item){
             this.$router.push(item.path)
         },

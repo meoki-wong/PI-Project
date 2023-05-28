@@ -10,9 +10,8 @@
         <div class="opt-area" v-if="isShowRegister">
             <van-field
                 v-model="teleVal"
-                type="tel"
-                maxlength="11"
-                placeholder="请输入手机号"
+                type="text"
+                placeholder="请输入用户名"
             />
             <van-field
                 v-model="authCode"
@@ -33,6 +32,7 @@
 
 <script>
 import Navbar from '../components/NavBar.vue'
+import { Toast } from 'vant'
 export default {
     components: {
         Navbar
@@ -57,11 +57,6 @@ export default {
     },
     methods: {
         async goHome(){
-            let regs = /^((13[0-9])|(17[0-1,6-8])|(15[^4,\\D])|(18[0-9]))\d{8}$/;
-            if(this.teleVal && !regs.test(this.teleVal)){
-                this.$toast.fail('请输入正确的手机号')
-                return
-            }
             let res = await this.axios.post('/login', {
                     userName: this.teleVal,
                     password: this.authCode
@@ -73,16 +68,35 @@ export default {
             }
         },
         async getLoginInfo(){
+            let _this = this
             const scopes = ['username', 'payments'];
-            let authResult = await window.Pi.authenticate(scopes, this.onIncompletePaymentFound);
+            Toast.loading({
+                duration: 0, // 持续展示 toast
+                forbidClick: true,
+                message: "加载中..."
+            });
+            let authResult = await window.Pi.authenticate(scopes, _this.onIncompletePaymentFound);
+            Toast.clear()
             if(authResult.user.uid){
                 window.server = authResult.user.uid
-                this.$router.push('/')
+                console.log('----wind', window.server);
+                window.userInfo = authResult.user
+                let items = await this.axios.post('/registerNewUser', {
+                    userName: authResult.user.username,
+                    pi_uuid: authResult.user.uid,
+                    pi_username: authResult.user.username
+                })
+                if(items.data.code == 200){
+                    this.$router.push('/')
+                } else {
+                    Toast.fail('网络错误，稍后重试')
+                }
             }
         },
         onIncompletePaymentFound(payment) {
+            alert('测试', JSON.stringify(payment))
                 console.log("onIncompletePaymentFound", payment);
-                return this.axios.post('/payments/incomplete', {payment});
+                // return this.axios.post('/payments/incomplete', {payment});
             }
     }
 }

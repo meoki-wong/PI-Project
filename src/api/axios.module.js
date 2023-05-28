@@ -9,7 +9,7 @@ import Vue from 'vue'
 
 let axiosInstance = axios.create({
     // baseURL: process.env.NODE_ENV === 'production' ?
-    baseURL: 'https://pitest.pist.top/pi_api',
+    baseURL: 'https://zf.pist.top/pi_api',
     // baseURL: 'http://localhost:10089/pi_api',
     timeout: 15 * 1000, // 设置请求超时时间
     retryDelay: 1000, // 超时请求
@@ -56,7 +56,7 @@ axiosInstance.interceptors.response.use((config) => {
     Toast.clear()
     let { status, statusText, data } = config
     if (!data.success) {
-        Toast.fail(data.msg || data.data)
+        Toast.fail(data.message || data.data.message)
     }
     console.log('====响应数据', config);
     return config

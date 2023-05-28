@@ -8,7 +8,7 @@
         <div class="quota-box">
             <van-field
                 v-model="userName"
-                type="number"
+                type="text"
                 placeholder="请输入转账账户(手机号)"
             />
         </div>
@@ -45,7 +45,9 @@ export default {
                     "Access-Control-Allow-Origin": "*",
                 },
             },
-            user: "",
+            user: {
+                uid: ""
+            },
         };
     },
     mounted() {
@@ -53,14 +55,14 @@ export default {
     },
     methods: {
       async getAccount(){
-            let pi_uuid
-            if (window.parent === window.self) {
-                pi_uuid = JSON.parse(localStorage.getItem('userInfo')).pi_uuid
-            } else {
-                pi_uuid = this.user.uid
-            }
+            // let pi_uuid
+            // if (window.parent === window.self) {
+            //     pi_uuid = JSON.parse(localStorage.getItem('userInfo')).pi_uuid
+            // } else {
+            //     pi_uuid = this.user.uid
+            // }
             let res = await this.axios.post('/findAccount', {
-                pi_uuid
+                pi_uuid: this.user.uid
             })
             if(res.data.code == 200){
                 this.balance = res.data.data.balance
@@ -74,6 +76,11 @@ export default {
                     this.onIncompletePaymentFound()
                 );
                 this.user = authResult.user || "";
+                this.getAccount()
+            } else {
+                this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+                this.user.uid = JSON.parse(localStorage.getItem('userInfo')).pi_uuid
+                this.getAccount()
             }
         },
         async orderProduct(memo, metadata) {
@@ -88,9 +95,10 @@ export default {
             let res = await this.axios.post('/transferMoney', {
                 userName: this.userName,
                 balanceVal: this.balanceVal,
-                pi_uuid: this.user.uuid || JSON.parse(window.localStorage.getItem('userInfo')).pi_uuid
+                pi_uuid: this.user.uid || JSON.parse(window.localStorage.getItem('userInfo')).pi_uuid
             })
             if(res.data.code == 200){
+                this.getAccount()
                 this.$toast.success('转账成功')
             }
         },

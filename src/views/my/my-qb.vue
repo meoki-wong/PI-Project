@@ -15,7 +15,7 @@
         <div class="opt-box">
             <div
                 class="cz-btn"
-                @click="orderProduct('用户充值金额', 'recharge_id')"
+                @click="orderProduct('用户充值金额', {productId: 'NW1U6C9SrGAGP52GukLyU0NWnXPj'})"
             >立即充值</div>
         </div>
     </div>
@@ -45,14 +45,14 @@ export default {
     },
     methods: {
       async getAccount(){
-            let pi_uuid
-            if (window.parent === window.self) {
-                pi_uuid = JSON.parse(localStorage.getItem('userInfo')).pi_uuid
-            } else {
-                pi_uuid = this.user.uid
-            }
+            // let pi_uuid
+            // if (window.parent === window.self) {
+            //     pi_uuid = JSON.parse(localStorage.getItem('userInfo')).pi_uuid
+            // } else {
+            //     pi_uuid = this.user.uid
+            // }
             let res = await this.axios.post('/findAccount', {
-                pi_uuid
+                pi_uuid: this.user
             })
             if(res.data.code == 200){
                 this.balance = res.data.data.balance
@@ -65,12 +65,13 @@ export default {
                     scopes,
                     this.onIncompletePaymentFound()
                 );
-                this.user = authResult.user || "";
+                this.user = authResult.user.uid || "";
+                this.getAccount()
+                console.log('----useridssss-----', this.user, authResult);
             }
         },
         async orderProduct(memo, metadata) {
-            console.log("====ceshi", window.parent);
-            console.log("====ceshi", window.self);
+            let _this = this
             if (window.parent === window.self) {
                 this.$toast.fail("请在pi浏览器环境下进行充值");
                 return;
@@ -84,17 +85,18 @@ export default {
                 this.$toast.fail("还未登录");
                 this.$router.push("/login");
             }
-            const paymentData = { amount, memo, metadata };
+            const paymentData = { amount, memo, metadata, uid: this.user };
             const callbacks = {
-                onReadyForServerApproval: this.onReadyForServerApproval(),
-                onReadyForServerCompletion: this.onReadyForServerCompletion(),
-                onCancel: this.onCancel(),
-                onError: this.onError(),
+                onReadyForServerApproval: _this.onReadyForServerApproval,
+                onReadyForServerCompletion: _this.onReadyForServerCompletion,
+                onCancel: _this.onCancel,
+                onError: _this.onError,
             };
-            const payment = await window.Pi.createPayment(
+                const payment = await window.Pi.createPayment(
                 paymentData,
                 callbacks
             );
+            console.log('--payment', payment);
             let params = {
                 ...payment,
                 ...payment.status,
@@ -122,7 +124,7 @@ export default {
             console.log("onReadyForServerCompletion", paymentId, txid);
             this.axios.post(
                 "/payments/complete",
-                { paymentId, txid },
+                { paymentId, txid, count: this.balanceVal, pi_uuid: this.user },
                 this.config
             );
         },

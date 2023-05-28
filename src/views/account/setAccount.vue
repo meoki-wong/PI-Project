@@ -88,7 +88,6 @@ export default {
                         pi_username: authResult.user.username
                     }
                     this.isShowRegister = true
-                    console.log('---this.isShowRegister', this.isShowRegister);
                 }
             }
         },
